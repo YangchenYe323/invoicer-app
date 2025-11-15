@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nvidia-smi:*)",
+      "Bash(lscpu:*)",
+      "Bash(uv remove:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run:*)",
+      "Bash(timeout 300 uv run:*)",
+      "Bash(for eml in my_data/invoices/*.eml)",
+      "Bash(do)",
+      "Bash(done)",
+      "Bash(jobs)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(timeout 180 uv run:*)",
+      "Bash([ -f results.json ])",
+      "Bash([ -d attachments ])",
+      "Bash(uv sync:*)",
+      "Bash(uv pip install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
