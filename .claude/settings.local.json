@@ -17,7 +17,14 @@
       "Bash([ -f results.json ])",
       "Bash([ -d attachments ])",
       "Bash(uv sync:*)",
-      "Bash(uv pip install:*)"
+      "Bash(uv pip install:*)",
+      "Bash(python oauth2.py:*)",
+      "Bash(export:*)",
+      "Bash(export GMAIL_EMAIL='eikasia30@gmail.com')",
+      "Bash(.venv/bin/modal run:*)",
+      "Bash(echo:*)",
+      "Bash(.venv/bin/modal deploy:*)",
+      "Bash(tee:*)"
     ],
     "deny": [],
     "ask": []
