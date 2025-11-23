@@ -26,7 +26,7 @@ image = (
 )
 
 # Modal secrets and volumes
-secrets = [modal.Secret.from_name("invoicer-secrets")]
+secrets = [modal.Secret.from_name("invoicer-secret-prod")]
 metrics_volume = modal.Volume.from_name("invoicer-metrics", create_if_missing=True)
 
 logger = logging.getLogger(__name__)
