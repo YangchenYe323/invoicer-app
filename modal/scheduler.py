@@ -37,7 +37,6 @@ logger = logging.getLogger(__name__)
     secrets=secrets,
     volumes={"/metrics": metrics_volume},
     timeout=3600,
-    schedule=modal.Cron("0 4 * * *", timezone="America/New_York"), # Daily at 4:00 AM New York time
 )
 def process_source_folder(
     source_folder_id: int,
@@ -345,8 +344,9 @@ def reconcile_folders(source, access_token, config, db):
     image=image,
     secrets=secrets,
     timeout=7200,  # 2 hours for full orchestration
+    schedule=modal.Cron("0 4 * * *", timezone="America/New_York"), # Daily at 4:00 AM New York time
 )
-def scheduler(batch_size: int = 1000, chunk_size: int = 200):
+def scheduler(batch_size: int = 1000, chunk_size: int = 100):
     """Main scheduler function - orchestrates the entire workflow.
 
     Workflow:
