@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict NM0LqJUdlxd1D28EpUDPyF72YJ2NKdrsWcvUS4t7H0qCerSV3nuZYuGHQME0Y6e
+\restrict lBVKZU32PkG1mVxZSpAHqCiZCsEsYrditOnVi6Eefax0GSayIUr5PwABHYy4heD
 
 -- Dumped from database version 18.0 (902cc69)
 -- Dumped by pg_dump version 18.1 (Ubuntu 18.1-1.pgdg24.04+2)
@@ -20,20 +20,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: drizzle; Type: SCHEMA; Schema: -; Owner: neondb_owner
+-- Name: drizzle; Type: SCHEMA; Schema: -; Owner: invoicer-web
 --
 
 CREATE SCHEMA drizzle;
 
 
-ALTER SCHEMA drizzle OWNER TO neondb_owner;
+ALTER SCHEMA drizzle OWNER TO "invoicer-web";
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: __drizzle_migrations; Type: TABLE; Schema: drizzle; Owner: neondb_owner
+-- Name: __drizzle_migrations; Type: TABLE; Schema: drizzle; Owner: invoicer-web
 --
 
 CREATE TABLE drizzle.__drizzle_migrations (
@@ -43,10 +43,10 @@ CREATE TABLE drizzle.__drizzle_migrations (
 );
 
 
-ALTER TABLE drizzle.__drizzle_migrations OWNER TO neondb_owner;
+ALTER TABLE drizzle.__drizzle_migrations OWNER TO "invoicer-web";
 
 --
--- Name: __drizzle_migrations_id_seq; Type: SEQUENCE; Schema: drizzle; Owner: neondb_owner
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE; Schema: drizzle; Owner: invoicer-web
 --
 
 CREATE SEQUENCE drizzle.__drizzle_migrations_id_seq
@@ -58,17 +58,17 @@ CREATE SEQUENCE drizzle.__drizzle_migrations_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE drizzle.__drizzle_migrations_id_seq OWNER TO neondb_owner;
+ALTER SEQUENCE drizzle.__drizzle_migrations_id_seq OWNER TO "invoicer-web";
 
 --
--- Name: __drizzle_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: drizzle; Owner: neondb_owner
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: drizzle; Owner: invoicer-web
 --
 
 ALTER SEQUENCE drizzle.__drizzle_migrations_id_seq OWNED BY drizzle.__drizzle_migrations.id;
 
 
 --
--- Name: account; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: account; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.account (
@@ -88,10 +88,10 @@ CREATE TABLE public.account (
 );
 
 
-ALTER TABLE public.account OWNER TO neondb_owner;
+ALTER TABLE public.account OWNER TO "invoicer-web";
 
 --
--- Name: invoice; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: invoice; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.invoice (
@@ -109,119 +109,127 @@ CREATE TABLE public.invoice (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     user_id text NOT NULL,
     attached_files jsonb,
-    uid integer
+    uid integer,
+    source_folder_id integer
 );
 
 
-ALTER TABLE public.invoice OWNER TO neondb_owner;
+ALTER TABLE public.invoice OWNER TO "invoicer-web";
 
 --
--- Name: COLUMN invoice.id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.id IS 'Auto-incrementing integer primary key';
 
 
 --
--- Name: COLUMN invoice.source_id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.source_id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.source_id IS 'The source ID of the source that contains the invoice, foreign key to the source table';
 
 
 --
--- Name: COLUMN invoice.message_id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.message_id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.message_id IS 'The IMAP message ID of the email that contains the invoice, stored as a string';
 
 
 --
--- Name: COLUMN invoice.invoice_number; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.invoice_number; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.invoice_number IS 'The invoice or receipt number, stored as a string';
 
 
 --
--- Name: COLUMN invoice.vendor_name; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.vendor_name; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.vendor_name IS 'The vendor name, stored as a string';
 
 
 --
--- Name: COLUMN invoice.due_date; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.due_date; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.due_date IS 'The due date, stored as a date in ISO 8601 format';
 
 
 --
--- Name: COLUMN invoice.total_amount; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.total_amount; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.total_amount IS 'The total amount, stored as a numeric value';
 
 
 --
--- Name: COLUMN invoice.currency; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.currency; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.currency IS 'The currency, stored as a string';
 
 
 --
--- Name: COLUMN invoice.payment_status; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.payment_status; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.payment_status IS 'The payment status, stored as a string, e.g., paid, unpaid, pending, etc.';
 
 
 --
--- Name: COLUMN invoice.line_items; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.line_items; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.line_items IS 'The line items, stored as a JSON array of LineItem objects, each containing a description, quantity, and unit price';
 
 
 --
--- Name: COLUMN invoice.created_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.created_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.created_at IS 'The date and time the invoice was created, automatically set to the current timestamp';
 
 
 --
--- Name: COLUMN invoice.updated_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.updated_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.updated_at IS 'The date and time the invoice was last updated, automatically set to the current timestamp';
 
 
 --
--- Name: COLUMN invoice.user_id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.user_id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.user_id IS 'The user ID of the user who owns the invoice, foreign key to the user table';
 
 
 --
--- Name: COLUMN invoice.attached_files; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.attached_files; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.attached_files IS 'The attached files in the invoice, stored as a JSON array of AttachedFile objects, each containing a file name and S3 object key';
 
 
 --
--- Name: COLUMN invoice.uid; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.uid; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.invoice.uid IS 'The IMAP UID of the email that contains the invoice, stored as an integer';
 
 
 --
--- Name: invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+-- Name: COLUMN invoice.source_folder_id; Type: COMMENT; Schema: public; Owner: invoicer-web
+--
+
+COMMENT ON COLUMN public.invoice.source_folder_id IS 'The source folder ID of the source folder that contains the invoice, foreign key to the source folder table';
+
+
+--
+-- Name: invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE public.invoice ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -235,7 +243,7 @@ ALTER TABLE public.invoice ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: session; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: session; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.session (
@@ -250,10 +258,10 @@ CREATE TABLE public.session (
 );
 
 
-ALTER TABLE public.session OWNER TO neondb_owner;
+ALTER TABLE public.session OWNER TO "invoicer-web";
 
 --
--- Name: source; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: source; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.source (
@@ -271,87 +279,87 @@ CREATE TABLE public.source (
 );
 
 
-ALTER TABLE public.source OWNER TO neondb_owner;
+ALTER TABLE public.source OWNER TO "invoicer-web";
 
 --
--- Name: COLUMN source.id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.id IS 'Auto-incrementing integer primary key';
 
 
 --
--- Name: COLUMN source.name; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.name; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.name IS 'The name of the source, autogenerated via convention <username>/<provider_type>/<email_address>';
 
 
 --
--- Name: COLUMN source.created_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.created_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.created_at IS 'The date and time the source was created, automatically set to the current timestamp';
 
 
 --
--- Name: COLUMN source.updated_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.updated_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.updated_at IS 'The date and time the source was last updated, automatically set to the current timestamp';
 
 
 --
--- Name: COLUMN source.user_id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.user_id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.user_id IS 'The user ID of the user who owns the source, foreign key to the user table';
 
 
 --
--- Name: COLUMN source.email_address; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.email_address; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.email_address IS 'The email address of the source';
 
 
 --
--- Name: COLUMN source.source_type; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.source_type; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.source_type IS 'The type of the source, e.g., gmail, outlook, etc.';
 
 
 --
--- Name: COLUMN source.oauth2_access_token; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.oauth2_access_token; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.oauth2_access_token IS 'OAuth2 access token, null if the source is not using OAuth2, stored as a string';
 
 
 --
--- Name: COLUMN source.oauth2_refresh_token; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.oauth2_refresh_token; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.oauth2_refresh_token IS 'OAuth2 refresh token, null if the source is not using OAuth2, stored as a string';
 
 
 --
--- Name: COLUMN source.oauth2_access_token_expires_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.oauth2_access_token_expires_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.oauth2_access_token_expires_at IS 'OAuth2 access token expiration date, null if the source is not using OAuth2, stored as a string in ISO 8601 format';
 
 
 --
--- Name: COLUMN source.oauth2_refresh_token_expires_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source.oauth2_refresh_token_expires_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source.oauth2_refresh_token_expires_at IS 'OAuth2 refresh token expiration date, null if the source is not using OAuth2, stored as a string in ISO 8601 format';
 
 
 --
--- Name: source_folder; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: source_folder; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.source_folder (
@@ -367,73 +375,73 @@ CREATE TABLE public.source_folder (
 );
 
 
-ALTER TABLE public.source_folder OWNER TO neondb_owner;
+ALTER TABLE public.source_folder OWNER TO "invoicer-web";
 
 --
--- Name: COLUMN source_folder.id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.id IS 'Auto-incrementing integer primary key';
 
 
 --
--- Name: COLUMN source_folder.source_id; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.source_id; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.source_id IS 'The source ID of the source that contains the folder, foreign key to the source table';
 
 
 --
--- Name: COLUMN source_folder.folder_name; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.folder_name; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.folder_name IS 'The name of the folder, stored as a string';
 
 
 --
--- Name: COLUMN source_folder.uid_validity; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.uid_validity; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.uid_validity IS 'The UID validity of the folder, stored as a string';
 
 
 --
--- Name: COLUMN source_folder.high_water_mark; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.high_water_mark; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.high_water_mark IS 'The largest message UID in the folder that has been processed, stored as an integer, null if haven''t processed any messages yet';
 
 
 --
--- Name: COLUMN source_folder.low_water_mark; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.low_water_mark; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.low_water_mark IS 'The smallest message UID in the folder that has been processed, stored as an integer, null if haven''t processed old messages yet';
 
 
 --
--- Name: COLUMN source_folder.last_processed_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.last_processed_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.last_processed_at IS 'The date and time the folder was last processed, stored as a date in ISO 8601 format';
 
 
 --
--- Name: COLUMN source_folder.created_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.created_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.created_at IS 'The date and time the folder was created, stored as a date in ISO 8601 format';
 
 
 --
--- Name: COLUMN source_folder.updated_at; Type: COMMENT; Schema: public; Owner: neondb_owner
+-- Name: COLUMN source_folder.updated_at; Type: COMMENT; Schema: public; Owner: invoicer-web
 --
 
 COMMENT ON COLUMN public.source_folder.updated_at IS 'The date and time the folder was last updated, stored as a date in ISO 8601 format';
 
 
 --
--- Name: source_folder_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+-- Name: source_folder_id_seq; Type: SEQUENCE; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE public.source_folder ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -447,7 +455,7 @@ ALTER TABLE public.source_folder ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- Name: source_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+-- Name: source_id_seq; Type: SEQUENCE; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE public.source ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -461,7 +469,7 @@ ALTER TABLE public.source ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: user; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: user; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public."user" (
@@ -475,10 +483,10 @@ CREATE TABLE public."user" (
 );
 
 
-ALTER TABLE public."user" OWNER TO neondb_owner;
+ALTER TABLE public."user" OWNER TO "invoicer-web";
 
 --
--- Name: verification; Type: TABLE; Schema: public; Owner: neondb_owner
+-- Name: verification; Type: TABLE; Schema: public; Owner: invoicer-web
 --
 
 CREATE TABLE public.verification (
@@ -491,17 +499,17 @@ CREATE TABLE public.verification (
 );
 
 
-ALTER TABLE public.verification OWNER TO neondb_owner;
+ALTER TABLE public.verification OWNER TO "invoicer-web";
 
 --
--- Name: __drizzle_migrations id; Type: DEFAULT; Schema: drizzle; Owner: neondb_owner
+-- Name: __drizzle_migrations id; Type: DEFAULT; Schema: drizzle; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY drizzle.__drizzle_migrations ALTER COLUMN id SET DEFAULT nextval('drizzle.__drizzle_migrations_id_seq'::regclass);
 
 
 --
--- Name: __drizzle_migrations __drizzle_migrations_pkey; Type: CONSTRAINT; Schema: drizzle; Owner: neondb_owner
+-- Name: __drizzle_migrations __drizzle_migrations_pkey; Type: CONSTRAINT; Schema: drizzle; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY drizzle.__drizzle_migrations
@@ -509,7 +517,7 @@ ALTER TABLE ONLY drizzle.__drizzle_migrations
 
 
 --
--- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.account
@@ -517,7 +525,15 @@ ALTER TABLE ONLY public.account
 
 
 --
--- Name: invoice invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: invoice invoice_number_unique; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
+--
+
+ALTER TABLE ONLY public.invoice
+    ADD CONSTRAINT invoice_number_unique UNIQUE (invoice_number);
+
+
+--
+-- Name: invoice invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.invoice
@@ -525,7 +541,7 @@ ALTER TABLE ONLY public.invoice
 
 
 --
--- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.session
@@ -533,7 +549,7 @@ ALTER TABLE ONLY public.session
 
 
 --
--- Name: session session_token_unique; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: session session_token_unique; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.session
@@ -541,7 +557,7 @@ ALTER TABLE ONLY public.session
 
 
 --
--- Name: source_folder source_folder_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: source_folder source_folder_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.source_folder
@@ -549,7 +565,7 @@ ALTER TABLE ONLY public.source_folder
 
 
 --
--- Name: source source_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: source source_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.source
@@ -557,7 +573,7 @@ ALTER TABLE ONLY public.source
 
 
 --
--- Name: user user_email_unique; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: user user_email_unique; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public."user"
@@ -565,7 +581,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public."user"
@@ -573,7 +589,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: verification verification_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: verification verification_pkey; Type: CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.verification
@@ -581,7 +597,7 @@ ALTER TABLE ONLY public.verification
 
 
 --
--- Name: account account_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: account account_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.account
@@ -589,7 +605,15 @@ ALTER TABLE ONLY public.account
 
 
 --
--- Name: invoice invoice_source_id_source_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: invoice invoice_source_folder_id_source_folder_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
+--
+
+ALTER TABLE ONLY public.invoice
+    ADD CONSTRAINT invoice_source_folder_id_source_folder_id_fk FOREIGN KEY (source_folder_id) REFERENCES public.source_folder(id) ON DELETE SET NULL;
+
+
+--
+-- Name: invoice invoice_source_id_source_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.invoice
@@ -597,7 +621,7 @@ ALTER TABLE ONLY public.invoice
 
 
 --
--- Name: invoice invoice_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: invoice invoice_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.invoice
@@ -605,7 +629,7 @@ ALTER TABLE ONLY public.invoice
 
 
 --
--- Name: session session_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: session session_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.session
@@ -613,7 +637,7 @@ ALTER TABLE ONLY public.session
 
 
 --
--- Name: source_folder source_folder_source_id_source_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: source_folder source_folder_source_id_source_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.source_folder
@@ -621,11 +645,18 @@ ALTER TABLE ONLY public.source_folder
 
 
 --
--- Name: source source_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
+-- Name: source source_user_id_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: invoicer-web
 --
 
 ALTER TABLE ONLY public.source
     ADD CONSTRAINT source_user_id_user_id_fk FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
+--
+
+GRANT ALL ON SCHEMA public TO "invoicer-web";
 
 
 --
@@ -646,5 +677,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE cloud_admin IN SCHEMA public GRANT ALL ON TABL
 -- PostgreSQL database dump complete
 --
 
-\unrestrict NM0LqJUdlxd1D28EpUDPyF72YJ2NKdrsWcvUS4t7H0qCerSV3nuZYuGHQME0Y6e
+\unrestrict lBVKZU32PkG1mVxZSpAHqCiZCsEsYrditOnVi6Eefax0GSayIUr5PwABHYy4heD
 

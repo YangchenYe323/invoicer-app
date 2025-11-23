@@ -292,7 +292,8 @@ class DatabaseClient:
                     datetime.now(),  # updated_at
                 ))
 
-            # Bulk insert
+            # Bulk insert with conflict handling
+            # ON CONFLICT DO NOTHING ignores duplicate invoice_number (guards against concurrent workers)
             cur.executemany("""
                 INSERT INTO invoice (
                     user_id, source_id, uid, message_id,
@@ -301,9 +302,10 @@ class DatabaseClient:
                     line_items, attached_files,
                     created_at, updated_at
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (invoice_number) DO NOTHING
             """, values)
 
-            logger.info(f"Inserted {len(invoices)} invoices")
+            logger.info(f"Inserted {len(invoices)} invoices (duplicates skipped)")
 
     def delete_all_invoices(self) -> int:
         """Delete all invoices (for testing/rollback).

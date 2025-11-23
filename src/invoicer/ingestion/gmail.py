@@ -126,22 +126,27 @@ class GmailSource(EmailSource):
                 if status == "OK" and data and data[0]:
                     new_uids = data[0].split()
 
-            # Search 2: Historical messages (UID < low_water_mark)
-            if low_water_mark is not None:
-                status, data = self._imap.uid("SEARCH", None, f"UID 1:{low_water_mark - 1}")
-                if status == "OK" and data and data[0]:
-                    historical_uids = data[0].split()
+            # Search 2: Historical messages (batch_size emails BELOW low_water_mark)
+            # This enables progressive backfill: 30000 → 29000 → 28000 → ...
+            if low_water_mark is not None and low_water_mark > 1:
+                # Calculate range for next batch of historical emails
+                historical_start = max(1, low_water_mark - batch_size)
+                historical_end = low_water_mark - 1
 
-            # Combine results: prioritize new messages, then historical
-            # New messages are more important, so take those first
+                if historical_start <= historical_end:
+                    status, data = self._imap.uid("SEARCH", None, f"UID {historical_start}:{historical_end}")
+                    if status == "OK" and data and data[0]:
+                        historical_uids = data[0].split()
+
+            # Combine results and sort in DESCENDING order (newest first)
+            # This ensures watermarks are updated correctly and emails processed newest → oldest
             new_uids_list = [int(uid.decode()) for uid in new_uids]
             historical_uids_list = [int(uid.decode()) for uid in historical_uids]
 
-            # Take newest messages first, then oldest historical messages
-            # Sort historical in ascending order (oldest first)
-            historical_uids_list.sort()
-
             combined = new_uids_list + historical_uids_list
+
+            # Sort in DESCENDING order (highest UID first)
+            combined.sort(reverse=True)
 
             # Limit to batch_size
             if len(combined) > batch_size:
