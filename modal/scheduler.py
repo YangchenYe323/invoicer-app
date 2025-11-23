@@ -345,7 +345,7 @@ def reconcile_folders(source, access_token, config, db):
     secrets=secrets,
     timeout=7200,  # 2 hours for full orchestration
 )
-def scheduler(batch_size: int = 2000, chunk_size: int = 200):
+def scheduler(batch_size: int = 1000, chunk_size: int = 200):
     """Main scheduler function - orchestrates the entire workflow.
 
     Workflow:
