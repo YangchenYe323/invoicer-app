@@ -37,12 +37,13 @@ logger = logging.getLogger(__name__)
     secrets=secrets,
     volumes={"/metrics": metrics_volume},
     timeout=3600,
+    schedule=modal.Cron("0 4 * * *", timezone="America/New_York"), # Daily at 4:00 AM New York time
 )
 def process_source_folder(
     source_folder_id: int,
     access_token: str,
-    batch_size: int = 2000,
-    chunk_size: int = 200,
+    batch_size: int = 1000,
+    chunk_size: int = 100,
 ) -> dict:
     """Process emails for a single source folder.
 
